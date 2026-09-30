@@ -322,6 +322,18 @@ docker compose up --build
 - **Modular and scalable:** separate rule, graph, and risk engines with asynchronous processing.
 
 ---
+## 📚 API Documentation
+
+The REST API contract is defined in OpenAPI format: [`lib/api-spec/openapi.yaml`](lib/api-spec/openapi.yaml).
+
+👉 [Open interactive API docs (Swagger Editor)](https://editor.swagger.io/?url=https://raw.githubusercontent.com/manyataasaxena/SentinelAML-NetworkGraph/main/lib/api-spec/openapi.yaml)
+
+- Base path: `/api`
+- Auth: email + password, JWT in an httpOnly cookie
+- Core resources: auth, customers, transactions, graph, analytics, risk, dashboard, alerts, audit-logs, search, notifications, reports
+- Cross-bank, mule screening, and investigation routes are implemented in the API server (`artifacts/api-server/src/routes/`)
+
+API request validation uses Zod schemas generated from the OpenAPI spec; React Query hooks are generated from the same file.
 
 ## 🔮 Future Enhancements
 
