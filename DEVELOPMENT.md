@@ -11,13 +11,13 @@ An AI-powered AML (anti-money-laundering) transaction intelligence platform for 
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec (`lib/api-spec/openapi.yaml`)
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
 - `pnpm --filter @workspace/scripts run seed:sentinel-aml` — seed demo customers/transactions/users (idempotent — skips if data already exists) with deliberately embedded circular chains, fan-in/fan-out structuring, and high-frequency accounts
-- Required env: `DATABASE_URL` — Postgres connection string (already provisioned); `SESSION_SECRET` — JWT signing secret for auth cookies; `BANK_PRIVACY_SECRET` — optional backend-only secret for stable anonymous cross-bank IDs (falls back to `SESSION_SECRET` in development)
+- Required env: `DATABASE_URL` — Postgres connection string ; `SESSION_SECRET` — JWT signing secret for auth cookies; `BANK_PRIVACY_SECRET` — optional backend-only secret for stable anonymous cross-bank IDs (falls back to `SESSION_SECRET` in development)
 
 ### Windows / local VS Code setup
 
 - Install Node.js 20+ and pnpm (`corepack enable` then `corepack prepare pnpm@10.26.1 --activate`) from PowerShell.
 - From the repository root, run `pnpm install`.
-- Set `DATABASE_URL` and `SESSION_SECRET` in the local environment. Replit supplies `PORT` and `BASE_PATH`; local development safely defaults the API to port `8080`, the SentinelAML frontend to port `5173`, and the frontend base path to `/`.
+- Set `DATABASE_URL` and `SESSION_SECRET` in the local environment. local development safely defaults the API to port `8080`, the SentinelAML frontend to port `5173`, and the frontend base path to `/`.
 - Start the API in one PowerShell window: `pnpm --filter @workspace/api-server run dev`.
 - Start the frontend in a second PowerShell window: `pnpm --filter @workspace/sentinel-aml run dev`.
 - The frontend proxy sends `/api` requests to `http://localhost:8080`; override it with `$env:VITE_API_PROXY_TARGET = "http://localhost:<port>"` if the API uses another port.
@@ -31,7 +31,7 @@ An AI-powered AML (anti-money-laundering) transaction intelligence platform for 
 - DB: PostgreSQL + Drizzle ORM (`lib/db`) — no ORM-level zod validation; request validation goes through Orval-generated Zod schemas for the original API and explicit boundary checks for extension routes
 - Auth: email+password with bcryptjs + JWT in an httpOnly cookie (`sentinel_session`), roles: admin, compliance_officer, analyst, investigator
 - API contract: OpenAPI spec → Orval codegen → React Query hooks (`lib/api-client-react`) + Zod schemas (`lib/api-zod`)
-- Graph analytics (centrality, connected components, cycle detection, shortest path) computed in-process in TypeScript over Postgres data — no separate graph database
+- Graph analytics (centrality, connected components, cycle detection, shortest path) computed in-process in TypeScript over Postgres data — no separate graph database Event pipeline: Kafka (KafkaJS) + AML worker, Redis caching, retry + Dead-Letter Queue
 
 ## Where things live
 
@@ -46,7 +46,7 @@ An AI-powered AML (anti-money-laundering) transaction intelligence platform for 
 ## Architecture decisions
 
 - Original brief targeted Next.js/Prisma/Neo4j; adapted to this workspace's conventions instead: one react-vite artifact + shared Express `api-server` + Drizzle/Postgres, with graph analytics computed in-process rather than in a separate graph database.
-- Kept JWT/bcrypt cookie auth (rather than Clerk/Replit Auth) per explicit brief requirement for role-based email+password auth.
+- Uses JWT/bcrypt cookie auth for role-based email+password login.
 - Request body validation happens via Orval-generated Zod schemas in route handlers, not `drizzle-zod` — avoids a zod v3/v4 type-compat issue between `drizzle-zod` and the workspace's pinned zod version.
 - Risk scoring is a deterministic, explainable rule engine (not ML) — each flagged rule contributes a named point value so `/risk/breakdown` can show compliance officers exactly why an account scored as it did.
 - Cross-bank data is simulated inside the same PostgreSQL database; anonymous IDs are SHA-256-derived on the backend and normal network responses never expose internal customer IDs.
@@ -69,13 +69,10 @@ An AI-powered AML (anti-money-laundering) transaction intelligence platform for 
 ## User preferences
 
 _Populate as you build — explicit user instructions worth remembering across sessions._
-
 ## Gotchas
-
 - After seeding, call `POST /api/risk/recompute` (as an authenticated user) to score customers and generate alerts — the seed script only inserts raw transactions.
 - The extension seed assigns customers to three simulated Indian banks and creates the named A101/B201/C301 cross-bank demonstration network.
 - `lib/db` intentionally does not depend on `drizzle-zod`; don't reintroduce it without checking zod version compatibility first.
 
 ## Pointers
-
 - See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
