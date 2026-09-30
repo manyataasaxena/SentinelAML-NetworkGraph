@@ -286,7 +286,8 @@ pnpm dev
 ```bash
 docker compose up --build
 ```
-
+Demo login : admin@sentinelaml.dev / Sentinel123!
+For detailed local setup, see [DEVELOPMENT.md](DEVELOPMENT.md).
 ---
 
 ## 📸 Application Preview
