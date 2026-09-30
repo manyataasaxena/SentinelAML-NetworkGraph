@@ -1,5 +1,6 @@
 # 🛡️ SentinelAML: Anti-Money Laundering Intelligence Platform
-                                     
+![CI](https://github.com/manyataasaxena/SentinelAML-NetworkGraph/actions/workflows/ci.yml/badge.svg)
+                          
 > A full-stack AML investigation platform combining transaction monitoring, graph-based network analysis, intelligent risk scoring, potential mule detection, privacy-aware cross-bank analysis, and event-driven processing.
 
 ---
