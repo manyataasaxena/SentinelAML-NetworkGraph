@@ -294,18 +294,15 @@ docker compose up --build
 
 | Dashboard | Transactions |
 |---|---|
-| 
 
 ![Dashboard](docs/screenshots/dashboard.png.png)
-
- | 
+ 
 
 ![Transactions](docs/screenshots/transactions.png.png)
 
 
 | Network Graph | Cross-Bank Analysis |
 |---|---|
-| 
 
 ![Network Graph](docs/screenshots/networkgraph.png.png)
 
@@ -315,13 +312,11 @@ docker compose up --build
 
 | Potential Mules | Compliance Reports |
 |---|---|
-| 
 
 ![Mules](docs/screenshots/potential%20mule.png.png)
  
 
 ![Reports](docs/screenshots/compilance%20report.png.png)
-
 
 
 ---
