@@ -13,7 +13,6 @@
 ![Redis](https://img.shields.io/badge/Redis-DC382D?logo=redis&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
 
-> A full-stack AML investigation platform that combines transaction monitoring, graph-based network analysis, explainable risk scoring, mule account detection, privacy-aware cross-bank analysis, and event-driven processing.
 
 ---
 
