@@ -291,19 +291,42 @@ docker compose up --build
 
 ## 📸 Application Preview
 
-> Add your screenshots to a `docs/screenshots/` folder and update the paths below.
 
 | Dashboard | Transactions |
 |---|---|
-| ![Dashboard](docs/screenshots/dashboard.png) | ![Transactions](docs/screenshots/transactions.png) |
+| 
+
+![Dashboard](docs/screenshots/dashboard.png.png)
+
+ | 
+
+![Transactions](docs/screenshots/transactions.png.png)
+
+ |
 
 | Network Graph | Cross-Bank Analysis |
 |---|---|
-| ![Network Graph](docs/screenshots/network-graph.png) | ![Cross-Bank](docs/screenshots/cross-bank.png) |
+| 
+
+![Network Graph](docs/screenshots/networkgraph.png.png)
+
+ | 
+
+![Cross-Bank](docs/screenshots/crossbank%20analysis.png.png)
+
+ |
 
 | Potential Mules | Compliance Reports |
 |---|---|
-| ![Mules](docs/screenshots/mules.png) | ![Reports](docs/screenshots/reports.png) |
+| 
+
+![Mules](docs/screenshots/potential%20mule.png.png)
+
+ | 
+
+![Reports](docs/screenshots/compilance%20report.png.png)
+
+ |
 
 ---
 
