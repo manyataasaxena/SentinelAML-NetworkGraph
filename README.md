@@ -812,4 +812,499 @@ You are free to use, modify, and distribute this project according to the terms 
 
 **Manyata Saxena**
 
-SentinelAML — AML Transaction Intelligence Platform
+SentinelAML — AML Transaction Intelligence Platform                                          # 🛡️ SentinelAML — Anti-Money Laundering Intelligence Platform
+
+> A full-stack AML investigation platform combining transaction monitoring, graph-based network analysis, intelligent risk scoring, potential mule detection, privacy-aware cross-bank analysis, and event-driven processing.
+
+---
+
+## 🚀 Overview
+
+**SentinelAML** is an end-to-end Anti-Money Laundering intelligence platform designed to help compliance teams **detect, analyze, investigate, and prioritize suspicious financial activity**.
+
+Instead of analyzing transactions as isolated records, SentinelAML models financial activity as a **connected transaction network**, enabling investigators to identify suspicious patterns and relationships across accounts.
+
+The platform combines:
+
+- 🔍 Transaction Monitoring
+- 🧠 Rule-Based AML Detection
+- 🕸️ Graph-Based Network Analysis
+- ⚡ Multi-Factor Risk Scoring
+- 🕵️ Potential Mule Account Detection
+- 🏦 Cross-Bank Analysis
+- 🔐 Privacy-Aware Identity Handling
+- 📊 Compliance Reporting
+- ⚙️ Event-Driven Processing
+- 🚨 Alerts & Investigation Workflows
+- 🔄 Retry & Dead-Letter Processing
+- ⚡ Redis Caching
+- 👥 Role-Based Access Control
+
+---
+
+# 🎯 Problem Statement
+
+Financial transactions can appear normal when analyzed individually but reveal suspicious behavior when viewed as part of a larger network.
+
+For example:
+
+```text
+Account A
+    ↓
+Account B
+    ↓
+Account C
+    ↓
+Account A
+This circular flow can indicate a suspicious transaction pattern.
+SentinelAML addresses this challenge by combining transaction-level rules with network-level intelligence, allowing investigators to understand not only what happened, but also how accounts are connected.
+✨ Key Features
+🔍 1. Transaction Monitoring
+Monitor and analyze financial transactions using:
+Sender and receiver
+Transaction amount
+Currency
+Timestamp
+Transaction status
+Account relationships
+Risk indicators
+The transaction interface supports searching, filtering, monitoring, and reviewing transaction activity.
+🧠 2. AML Rule Engine
+SentinelAML detects multiple suspicious transaction patterns using configurable AML rules.
+Detection Patterns
+Circular transaction chains
+Fan-in aggregation
+Fan-out distribution
+High-value transactions
+High-frequency activity
+Structuring-related activity
+Suspicious network relationships
+Detected patterns contribute to the overall risk assessment of an account.
+🕸️ 3. Interactive Network Graph
+SentinelAML represents transaction relationships as a directed graph.
+              Account A
+                  │
+                  ▼
+              Account B
+             ↙        ↘
+        Account C    Account D
+             │
+             ▼
+          Account A
+The interactive graph helps investigators identify:
+High-risk accounts
+Connected entities
+Suspicious transaction flows
+Circular relationships
+Network concentration
+Account-to-account relationships
+Flagged transaction paths
+Risk Visualization
+Risk Level
+Visualization
+🟢 Low
+Low-risk nodes
+🟠 Medium
+Medium-risk nodes
+🔴 High
+High-risk nodes
+🔴 Critical
+Critical-risk nodes
+⚡ 4. Multi-Factor Risk Scoring
+SentinelAML calculates account risk using multiple transaction and behavioral factors.
+Risk Factors
+Transaction amount
+Transaction frequency
+Connected accounts
+Circular transaction behavior
+Fan-in activity
+Fan-out activity
+Suspicious transaction indicators
+Network relationships
+Accounts are categorized into:
+LOW
+MEDIUM
+HIGH
+CRITICAL
+This allows investigators to focus on the entities requiring the most attention.
+🕵️ 5. Potential Mule Account Detection
+SentinelAML includes an explainable rule-based mule screening system.
+The system evaluates behavioral signals such as:
+High fan-in
+High fan-out
+Rapid pass-through activity
+Received-to-transferred fund ratios
+Cross-bank activity
+Transaction velocity
+Example:
+Multiple Sources
+      ↓
+   Account X
+      ↓
+Multiple Destinations
+The system provides the reasons contributing to the mule score, making the detection process transparent and explainable.
+🏦 6. Privacy-Aware Cross-Bank Analysis
+SentinelAML supports analysis across three simulated financial institutions while maintaining privacy-aware entity representation.
+The cross-bank investigation module provides:
+Cross-bank transaction analysis
+Cross-bank flows
+Privacy-safe external entities
+Pseudonymous identifiers
+Restricted identity representation
+Network risk analysis
+Potential mule detection across institutions
+Controlled identity disclosure workflows
+Cross-Bank Investigation
+             Bank A
+                │
+                │
+        ┌───────▼───────┐
+        │ Privacy-Aware │
+        │ Network Layer │
+        └───────┬───────┘
+                │
+        ┌───────┴───────┐
+        │               │
+      Bank B          Bank C
+This demonstrates how financial institutions can analyze suspicious relationships while maintaining privacy-aware entity handling.
+⚙️ 7. Event-Driven Transaction Processing
+SentinelAML includes an event-driven processing architecture using:
+Apache Kafka
+KafkaJS
+Redis
+Background AML workers
+Retry mechanisms
+Dead-Letter Queue
+Worker health monitoring
+Idempotent transaction processing
+Processing Flow
+Transaction Received
+        ↓
+      Kafka
+        ↓
+    AML Worker
+        ↓
+ Risk Calculation
+        ↓
+   ┌────┼────┐
+   ↓    ↓    ↓
+ Alert Graph Database
+This architecture separates transaction ingestion from downstream processing and provides a foundation for scalable AML processing.
+🔄 8. Retry & Dead-Letter Queue
+The asynchronous processing layer includes fault-tolerant processing.
+        Event
+          ↓
+        Worker
+          ↓
+      Processing
+       ↙      ↘
+   Success    Failure
+      ↓          ↓
+ Processed     Retry
+                   ↓
+              Retry Limit
+                   ↓
+                 DLQ
+                   ↓
+                Replay
+This improves reliability and provides a mechanism for recovering failed events.
+⚡ 9. Redis Caching
+Redis provides a caching layer for frequently accessed data and infrastructure operations.
+Capabilities include:
+Cache-aside strategy
+TTL-based caching
+Cache invalidation
+Worker heartbeat tracking
+Graceful fallback
+🔐 10. Authentication & RBAC
+SentinelAML includes authentication and role-based access control.
+Supported Roles
+👑 Admin
+🛡️ Compliance Officer
+🔎 Analyst
+🕵️ Investigator
+Security components include:
+Authentication
+Authorization
+Password hashing
+Protected APIs
+Role-based permissions
+Audit logging
+🚨 11. Alerts & Investigations
+The alert system centralizes suspicious activities detected by the AML engine.
+Investigators can analyze:
+Alert severity
+Account risk
+Detection reasons
+Transaction relationships
+Network connections
+Suspicious activity patterns
+Investigation Flow
+Transaction
+     ↓
+AML Detection
+     ↓
+Risk Scoring
+     ↓
+Alert Generation
+     ↓
+Network Investigation
+     ↓
+Compliance Review
+📊 12. Compliance Reports
+The reporting module provides compliance-oriented insights including:
+Highest-risk entities
+Risk distribution
+Suspicious activity summaries
+Account risk scores
+Data exports
+Investigation information
+This helps transform transaction-level information into actionable compliance intelligence.
+📝 13. Audit Logs
+The platform maintains audit-oriented records for important system and investigation activities.
+This provides visibility into:
+User activity
+Investigation actions
+System operations
+Compliance workflows
+🏗️ System Architecture
+┌─────────────────────────────────────────────┐
+│                React Frontend               │
+│     TypeScript + Vite + Tailwind CSS        │
+└──────────────────────┬──────────────────────┘
+                       │
+                    REST API
+                       │
+┌──────────────────────▼──────────────────────┐
+│              Node.js + Express              │
+│                  API Server                  │
+└──────────────────────┬──────────────────────┘
+                       │
+       ┌───────────────┼────────────────┐
+       │               │                │
+       ▼               ▼                ▼
+ ┌──────────┐    ┌────────────┐   ┌───────────┐
+ │AML Rules │    │   Graph    │   │   Risk    │
+ │  Engine  │    │ Analytics  │   │  Engine   │
+ └──────────┘    └────────────┘   └───────────┘
+       │               │                │
+       └───────────────┼────────────────┘
+                       │
+                 PostgreSQL
+                       │
+            ┌──────────┴──────────┐
+            │                     │
+            ▼                     ▼
+         Kafka                  Redis
+            │
+            ▼
+       AML Workers
+            │
+       ┌────┼────┐
+       ▼    ▼    ▼
+     Retry DLQ Events
+🔄 Transaction Processing Architecture
+                 Transaction
+                      │
+                      ▼
+               Input Validation
+                      │
+                      ▼
+               Idempotency Check
+                      │
+              ┌───────┴───────┐
+              │               │
+          Sync Mode       Async Mode
+              │               │
+              ▼               ▼
+        AML Processing      Kafka
+                              │
+                              ▼
+                           Worker
+                              │
+                              ▼
+                       Risk Calculation
+                              │
+                 ┌────────────┼────────────┐
+                 ▼            ▼            ▼
+               Alert        Graph       Database
+                 │          Update
+                 └────────────┬────────────┘
+                              ▼
+                        Investigation
+🖥️ Application Modules
+📊 Dashboard
+Real-time overview of customers, transaction flow, high-risk nodes, and open alerts.
+👥 Customers
+Search and filter monitored entities using account, name, email, and risk information.
+💸 Transactions
+Monitor sender, receiver, amount, currency, timestamp, and transaction status.
+🕸️ Network Graph
+Explore transaction relationships and suspicious network patterns visually.
+🏦 Cross-Bank Analysis
+Perform privacy-aware analysis across multiple financial institutions.
+🕵️ Potential Mules
+Identify potential mule behavior using explainable transaction patterns.
+🔎 Investigations
+Analyze suspicious accounts and transaction networks.
+🚨 Alerts
+Centralized suspicious-activity detection and review.
+📄 Compliance Reports
+Generate risk summaries and compliance-oriented reports.
+📋 Audit Logs
+Track important system and investigation activities.
+⚙️ Settings
+Manage system configuration and user preferences.
+🛠️ Technology Stack
+Frontend
+React
+TypeScript
+Vite
+Tailwind CSS
+Framer Motion
+React Query
+React Router
+Lucide React
+React Force Graph
+D3.js
+Backend
+Node.js
+Express.js
+TypeScript
+REST APIs
+OpenAPI
+Zod
+Database
+PostgreSQL
+Drizzle ORM
+Event-Driven Infrastructure
+Apache Kafka
+KafkaJS
+Redis
+ioredis
+Background Workers
+Retry Processing
+Dead-Letter Queue
+Security
+Authentication
+Role-Based Access Control
+Password Hashing
+Protected APIs
+Audit Logging
+DevOps
+Docker
+Docker Compose
+Git
+GitHub
+📈 Demo System Overview
+The current application demonstrates a connected AML environment with:
+Metric
+Value
+Customer Profiles
+127
+Transactions
+414
+High-Risk Nodes
+45
+Open Alerts
+180
+Simulated Banks
+3
+Cross-Bank Accounts
+121
+Cross-Bank Flows
+284
+Potential Mule Profiles
+19
+🧠 AML Intelligence Approach
+SentinelAML combines multiple analytical layers:
+Transaction Rules
+       +
+Behavioral Indicators
+       +
+Graph Relationships
+       +
+Network Risk
+       +
+Cross-Bank Signals
+       +
+Risk Scoring
+       ↓
+AML Investigation Intelligence
+The architecture is designed to support future intelligence layers such as:
+Machine Learning anomaly detection
+Advanced behavioral profiling
+Graph embeddings
+Community detection
+Centrality analysis
+Explainable AI
+AI-assisted investigations
+Advanced graph intelligence
+🧪 Testing & Reliability
+The infrastructure includes testing and reliability mechanisms for:
+Event processing
+Retry behavior
+Event identity
+Redis fallback
+Asynchronous processing
+Worker health
+Failure recovery
+🐳 Docker Support
+The project includes Docker Compose infrastructure for running the application and supporting services.
+docker compose up --build
+⚙️ Local Setup
+1. Clone Repository
+git clone https://github.com/manyataasaxena/Sentinel-AML-Network-Graph.git
+cd Sentinel-AML-Network-Graph
+2. Install Dependencies
+pnpm install
+3. Configure Environment
+Configure the required database, Kafka, and Redis environment variables.
+Example:
+DATABASE_URL=your_postgresql_connection_string
+REDIS_URL=your_redis_connection_string
+KAFKA_BROKERS=your_kafka_broker
+4. Start Development Environment
+pnpm dev
+5. Docker Environment
+docker compose up --build
+📸 Application Preview
+System Dashboard
+The central dashboard provides a real-time overview of monitored entities, transaction flow, high-risk accounts, and active alerts.
+Transaction Monitoring
+Monitor and filter transaction activity across accounts and currencies.
+Network Graph
+Explore connected financial entities and identify suspicious transaction relationships.
+Cross-Bank Analysis
+Analyze privacy-aware transaction relationships across multiple simulated banks.
+Potential Mule Detection
+Investigate potential mule accounts using explainable behavioral indicators.
+Compliance Reports
+Review risk distribution and highest-risk entities for compliance investigation.
+🎯 Project Highlights
+🔹 Network-Centric AML
+Moves beyond isolated transaction monitoring by analyzing relationships between financial entities.
+🔹 Explainable Risk Analysis
+Provides visible risk factors behind suspicious activity and potential mule detection.
+🔹 Privacy-Aware Cross-Bank Intelligence
+Demonstrates cross-institution investigation while using privacy-safe external entity representations.
+🔹 Event-Driven Architecture
+Uses Kafka, asynchronous workers, Redis, retry processing, and DLQ infrastructure.
+🔹 Investigator-Centric Interface
+Provides dedicated workflows for transactions, alerts, investigations, network analysis, mule screening, and compliance reporting.
+🔹 Scalable Architecture
+Designed with modular services and asynchronous processing to support future expansion.
+🚀 Future Enhancements
+Machine Learning anomaly detection
+Advanced behavioral profiling
+Graph embeddings
+Community detection
+Centrality and influence analysis
+Explainable AI / SHAP
+AI-assisted investigation
+Automated investigation summaries
+Advanced graph intelligence
+Real-time intelligence pipelines
+👩‍💻 Author
+Manyata Saxena
+B.Tech — Computer Science Engineering
