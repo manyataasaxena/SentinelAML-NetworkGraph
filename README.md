@@ -3,7 +3,6 @@
 > A full-stack AML investigation platform combining transaction monitoring, graph-based network analysis, intelligent risk scoring, potential mule detection, privacy-aware cross-bank analysis, and event-driven processing.
 
 ---
-# 🛡️ SentinelAML: Anti-Money Laundering Intelligence Platform
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
