@@ -291,34 +291,20 @@ docker compose up --build
 
 ## 📸 Application Preview
 
-
-| Dashboard | Transactions |
-|---|---|
-
-![Dashboard](docs/screenshots/dashboard.png.png)
- 
-
-![Transactions](docs/screenshots/transactions.png.png)
-
-
-
-| Network Graph | Cross-Bank Analysis |
-|---|---|
-
-![Network Graph](docs/screenshots/networkgraph.png.png)
-
-
-![Cross-Bank](docs/screenshots/crossbank%20analysis.png.png)
-
-
-
-| Potential Mules | Compliance Reports |
-|---|---|
-
-![Mules](docs/screenshots/potential%20mule.png.png)
- 
-
-![Reports](docs/screenshots/compilance%20report.png.png)
+<table>
+<tr>
+<td><b>Dashboard</b><br><img src="docs/screenshots/dashboard.png.png" width="100%"></td>
+<td><b>Transactions</b><br><img src="docs/screenshots/transactions.png.png" width="100%"></td>
+</tr>
+<tr>
+<td><b>Network Graph</b><br><img src="docs/screenshots/networkgraph.png.png" width="100%"></td>
+<td><b>Cross-Bank Analysis</b><br><img src="docs/screenshots/crossbank%20analysis.png.png" width="100%"></td>
+</tr>
+<tr>
+<td><b>Potential Mules</b><br><img src="docs/screenshots/potential%20mule.png.png" width="100%"></td>
+<td><b>Compliance Reports</b><br><img src="docs/screenshots/compilance%20report.png.png" width="100%"></td>
+</tr>
+</table>
 
 
 
