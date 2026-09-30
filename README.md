@@ -254,8 +254,8 @@ Ingestion is separated from downstream processing, which gives a solid foundatio
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/manyataasaxena/Sentinel-AML-Network-Graph.git
-cd Sentinel-AML-Network-Graph
+git clone https://github.com/manyataasaxena/SentinelAML-NetworkGraph.git
+cd SentinelAML-NetworkGraph
 ```
 
 ### 2. Install dependencies
