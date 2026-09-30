@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "SentinelAML"
+version = "1.0.0"
+id = "artifacts/sentinel-aml"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19799
+
+[services.development]
+run = "pnpm --filter @workspace/sentinel-aml run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/sentinel-aml", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/sentinel-aml/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19799"
+BASE_PATH = "/"

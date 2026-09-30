@@ -1,0 +1,18 @@
+import { useQuery } from "@tanstack/react-query";
+import { ShieldAlert, Loader2, ArrowRightLeft, Percent } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { intelligenceFetch, type Mule } from "@/lib/intelligence-api";
+import { formatCurrency } from "@/lib/utils";
+
+export default function Mules() {
+  const { data, isLoading } = useQuery({ queryKey: ["/api/mules"], queryFn: () => intelligenceFetch<{ items: Mule[] }>("/mules") });
+  if (isLoading) return <div className="flex h-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
+  const items = data?.items || [];
+  return <div className="space-y-6">
+    <div><h1 className="flex items-center gap-3 text-3xl font-bold tracking-tight"><ShieldAlert className="h-8 w-8 text-warning" />Potential Mule Accounts</h1><p className="mt-1 text-muted-foreground">Explainable screening for rapid pass-through and fan-in/fan-out behavior.</p></div>
+    <Card><CardHeader><CardTitle>Rule-based mule screening</CardTitle></CardHeader><CardContent><p className="text-sm text-muted-foreground">This module complements the existing AML engine. It does not use machine learning and never declares an account guilty.</p></CardContent></Card>
+    <div className="grid gap-4 md:grid-cols-3"><Card><CardContent className="p-5"><p className="text-sm text-muted-foreground">Profiles screened</p><p className="mt-1 text-2xl font-bold">{items.length}</p></CardContent></Card><Card><CardContent className="p-5"><p className="text-sm text-muted-foreground">Potential mules</p><p className="mt-1 text-2xl font-bold text-warning">{items.filter((item) => item.score >= 70).length}</p></CardContent></Card><Card><CardContent className="p-5"><p className="text-sm text-muted-foreground">Cross-bank profiles</p><p className="mt-1 text-2xl font-bold">{items.filter((item) => item.crossBank).length}</p></CardContent></Card></div>
+    <Card><CardContent className="overflow-auto p-0"><table className="w-full text-sm"><thead><tr className="border-b text-left text-muted-foreground"><th className="p-4">Anonymous entity</th><th className="p-4">Bank</th><th className="p-4">Mule score</th><th className="p-4">Flow</th><th className="p-4">Reasons</th></tr></thead><tbody>{items.map((item) => <tr key={item.id} className="border-b border-border/50 align-top"><td className="p-4 font-mono">{item.anonymousId}<div className="mt-1 text-xs text-muted-foreground">Identity restricted</div></td><td className="p-4">{item.bank}{item.crossBank && <Badge variant="outline" className="ml-2">Cross-Bank</Badge>}</td><td className="p-4"><Badge variant={item.score >= 70 ? "destructive" : "secondary"}>{item.score}/100</Badge><div className="mt-2 text-xs text-muted-foreground">{item.status}</div></td><td className="p-4"><div className="flex items-center gap-2"><ArrowRightLeft className="h-4 w-4 text-muted-foreground" />{item.incomingCount} in / {item.outgoingCount} out</div><div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground"><Percent className="h-3 w-3" />{item.passThroughPercentage}% onward</div><div className="mt-1 text-xs">{formatCurrency(item.receivedAmount, "INR")} received</div></td><td className="max-w-[320px] p-4"><div className="flex flex-wrap gap-1">{item.reasons.map((reason) => <Badge key={reason} variant="warning">{reason}</Badge>)}</div></td></tr>)}</tbody></table>{items.length === 0 && <p className="p-8 text-center text-muted-foreground">No mule indicators detected.</p>}</CardContent></Card>
+  </div>;
+}

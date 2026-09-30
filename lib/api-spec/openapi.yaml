@@ -1,0 +1,1261 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: SentinelAML API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: auth
+    description: Authentication
+  - name: customers
+    description: Customer management
+  - name: transactions
+    description: Transaction management
+  - name: graph
+    description: Transaction network graph
+  - name: analytics
+    description: Graph analytics
+  - name: risk
+    description: Risk scoring engine
+  - name: dashboard
+    description: Dashboard summary data
+  - name: alerts
+    description: Suspicious activity alerts
+  - name: audit
+    description: Audit logging
+  - name: search
+    description: Global search
+  - name: notifications
+    description: Notification feed
+  - name: reports
+    description: Report generation and export
+  - name: ai
+    description: Future AI module placeholders
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  # ---------------------------------------------------------------------
+  # Auth
+  # ---------------------------------------------------------------------
+  /auth/signup:
+    post:
+      operationId: signup
+      tags: [auth]
+      summary: Create a new account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignupInput"
+      responses:
+        "201":
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Email already registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Log in with email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Log out the current session
+      responses:
+        "204":
+          description: Logged out
+  /auth/me:
+    get:
+      operationId: getCurrentUser
+      tags: [auth]
+      summary: Get the currently authenticated user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # ---------------------------------------------------------------------
+  # Customers
+  # ---------------------------------------------------------------------
+  /customers:
+    get:
+      operationId: listCustomers
+      tags: [customers]
+      summary: List customers
+      parameters:
+        - name: search
+          in: query
+          schema: { type: string }
+        - name: country
+          in: query
+          schema: { type: string }
+        - name: riskLevel
+          in: query
+          schema:
+            $ref: "#/components/schemas/RiskLevel"
+        - name: page
+          in: query
+          schema: { type: integer, minimum: 1, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 200, default: 20 }
+      responses:
+        "200":
+          description: List of customers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerList"
+    post:
+      operationId: createCustomer
+      tags: [customers]
+      summary: Create a customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /customers/{id}:
+    get:
+      operationId: getCustomer
+      tags: [customers]
+      summary: Get a customer by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Customer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateCustomer
+      tags: [customers]
+      summary: Update a customer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteCustomer
+      tags: [customers]
+      summary: Delete a customer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /customers/{id}/transactions:
+    get:
+      operationId: getCustomerTransactions
+      tags: [customers]
+      summary: Get all transactions for a customer (sent + received)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Transactions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Transaction"
+
+  # ---------------------------------------------------------------------
+  # Transactions
+  # ---------------------------------------------------------------------
+  /transactions:
+    get:
+      operationId: listTransactions
+      tags: [transactions]
+      summary: List transactions with filters
+      parameters:
+        - name: search
+          in: query
+          schema: { type: string }
+        - name: currency
+          in: query
+          schema: { type: string }
+        - name: status
+          in: query
+          schema:
+            $ref: "#/components/schemas/TxStatus"
+        - name: minAmount
+          in: query
+          schema: { type: number }
+        - name: maxAmount
+          in: query
+          schema: { type: number }
+        - name: startDate
+          in: query
+          schema: { type: string, format: date-time }
+        - name: endDate
+          in: query
+          schema: { type: string, format: date-time }
+        - name: page
+          in: query
+          schema: { type: integer, minimum: 1, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 200, default: 20 }
+      responses:
+        "200":
+          description: List of transactions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionList"
+    post:
+      operationId: createTransaction
+      tags: [transactions]
+      summary: Create a transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /transactions/{id}:
+    get:
+      operationId: getTransaction
+      tags: [transactions]
+      summary: Get a transaction by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Transaction
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateTransaction
+      tags: [transactions]
+      summary: Update a transaction
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteTransaction
+      tags: [transactions]
+      summary: Delete a transaction
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # ---------------------------------------------------------------------
+  # Graph
+  # ---------------------------------------------------------------------
+  /graph:
+    get:
+      operationId: getGraph
+      tags: [graph]
+      summary: Get the transaction network graph (nodes + edges)
+      parameters:
+        - name: riskLevel
+          in: query
+          schema:
+            $ref: "#/components/schemas/RiskLevel"
+        - name: minAmount
+          in: query
+          schema: { type: number }
+        - name: currency
+          in: query
+          schema: { type: string }
+        - name: flaggedOnly
+          in: query
+          schema: { type: boolean, default: false }
+      responses:
+        "200":
+          description: Graph data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphData"
+
+  # ---------------------------------------------------------------------
+  # Analytics
+  # ---------------------------------------------------------------------
+  /analytics/centrality:
+    get:
+      operationId: getCentrality
+      tags: [analytics]
+      summary: Degree centrality for every account
+      responses:
+        "200":
+          description: Centrality entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CentralityEntry"
+  /analytics/components:
+    get:
+      operationId: getConnectedComponents
+      tags: [analytics]
+      summary: Connected components in the transaction network
+      responses:
+        "200":
+          description: Connected component entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ComponentEntry"
+  /analytics/cycles:
+    get:
+      operationId: getCycles
+      tags: [analytics]
+      summary: Detected circular transaction chains
+      responses:
+        "200":
+          description: Cycle entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CycleEntry"
+  /analytics/shortest-path:
+    get:
+      operationId: getShortestPath
+      tags: [analytics]
+      summary: Shortest path between two accounts
+      parameters:
+        - name: from
+          in: query
+          required: true
+          schema: { type: string }
+        - name: to
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Shortest path result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShortestPathResult"
+  /analytics/most-connected:
+    get:
+      operationId: getMostConnected
+      tags: [analytics]
+      summary: Top N accounts by degree
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100, default: 10 }
+      responses:
+        "200":
+          description: Most connected accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CentralityEntry"
+
+  # ---------------------------------------------------------------------
+  # Risk
+  # ---------------------------------------------------------------------
+  /risk/recompute:
+    post:
+      operationId: recomputeRisk
+      tags: [risk]
+      summary: Recompute risk scores for every account
+      responses:
+        "200":
+          description: Recompute result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RiskRecomputeResult"
+  /risk/{customerId}:
+    get:
+      operationId: getRiskBreakdown
+      tags: [risk]
+      summary: Get the explainable risk breakdown for a customer
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Risk breakdown
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RiskBreakdown"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # ---------------------------------------------------------------------
+  # Dashboard
+  # ---------------------------------------------------------------------
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: KPI summary and recent alerts for the dashboard
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  # ---------------------------------------------------------------------
+  # Alerts
+  # ---------------------------------------------------------------------
+  /alerts:
+    get:
+      operationId: listAlerts
+      tags: [alerts]
+      summary: List alerts
+      parameters:
+        - name: severity
+          in: query
+          schema:
+            $ref: "#/components/schemas/RiskLevel"
+        - name: resolved
+          in: query
+          schema: { type: boolean }
+        - name: page
+          in: query
+          schema: { type: integer, minimum: 1, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 200, default: 20 }
+      responses:
+        "200":
+          description: List of alerts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AlertList"
+  /alerts/{id}:
+    get:
+      operationId: getAlert
+      tags: [alerts]
+      summary: Get an alert by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Alert
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Alert"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateAlert
+      tags: [alerts]
+      summary: Mark an alert as reviewed or escalated
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AlertUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Alert"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # ---------------------------------------------------------------------
+  # Audit logs
+  # ---------------------------------------------------------------------
+  /audit-logs:
+    get:
+      operationId: listAuditLogs
+      tags: [audit]
+      summary: List audit logs (admin only)
+      parameters:
+        - name: userId
+          in: query
+          schema: { type: string }
+        - name: action
+          in: query
+          schema: { type: string }
+        - name: page
+          in: query
+          schema: { type: integer, minimum: 1, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 200, default: 20 }
+      responses:
+        "200":
+          description: List of audit logs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuditLogList"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # ---------------------------------------------------------------------
+  # Search
+  # ---------------------------------------------------------------------
+  /search:
+    get:
+      operationId: globalSearch
+      tags: [search]
+      summary: Search across customers, accounts, and transactions
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SearchResult"
+
+  # ---------------------------------------------------------------------
+  # Notifications
+  # ---------------------------------------------------------------------
+  /notifications:
+    get:
+      operationId: listNotifications
+      tags: [notifications]
+      summary: List recent fraud alert notifications
+      responses:
+        "200":
+          description: Notifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NotificationItem"
+  /notifications/{id}/read:
+    patch:
+      operationId: markNotificationRead
+      tags: [notifications]
+      summary: Mark a notification as read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationItem"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # ---------------------------------------------------------------------
+  # Reports
+  # ---------------------------------------------------------------------
+  /reports/summary:
+    get:
+      operationId: getReportSummary
+      tags: [reports]
+      summary: Risk summary and suspicious accounts report
+      responses:
+        "200":
+          description: Report summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReportSummary"
+  /reports/export:
+    get:
+      operationId: exportReport
+      tags: [reports]
+      summary: Export customers, transactions, or alerts as CSV
+      parameters:
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [customers, transactions, alerts]
+      responses:
+        "200":
+          description: CSV file
+          content:
+            text/csv:
+              schema:
+                type: string
+
+  # ---------------------------------------------------------------------
+  # AI placeholders (future modules)
+  # ---------------------------------------------------------------------
+  /ai/assistant:
+    post:
+      operationId: aiAssistant
+      tags: [ai]
+      summary: "Placeholder for the future LLM investigation assistant"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AiAssistantInput"
+      responses:
+        "501":
+          description: AI module not yet enabled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
+
+    Role:
+      type: string
+      enum: [admin, compliance_officer, analyst, investigator]
+
+    RiskLevel:
+      type: string
+      enum: [low, medium, high, critical]
+
+    TxStatus:
+      type: string
+      enum: [clean, flagged, under_review]
+
+    User:
+      type: object
+      required: [id, name, email, role, createdAt]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        email: { type: string }
+        role:
+          $ref: "#/components/schemas/Role"
+        createdAt: { type: string, format: date-time }
+
+    SignupInput:
+      type: object
+      required: [name, email, password]
+      properties:
+        name: { type: string, minLength: 1 }
+        email: { type: string }
+        password: { type: string, minLength: 6 }
+        role:
+          $ref: "#/components/schemas/Role"
+
+    LoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string }
+        password: { type: string }
+
+    Customer:
+      type: object
+      required:
+        [
+          id,
+          fullName,
+          email,
+          country,
+          dob,
+          accountNo,
+          riskScore,
+          riskLevel,
+          createdAt,
+        ]
+      properties:
+        id: { type: string }
+        fullName: { type: string }
+        email: { type: string }
+        country: { type: string }
+        dob: { type: string, format: date }
+        accountNo: { type: string }
+        riskScore: { type: integer }
+        riskLevel:
+          $ref: "#/components/schemas/RiskLevel"
+        createdAt: { type: string, format: date-time }
+
+    CustomerInput:
+      type: object
+      required: [fullName, email, country, dob, accountNo]
+      properties:
+        fullName: { type: string, minLength: 1 }
+        email: { type: string }
+        country: { type: string, minLength: 1 }
+        dob: { type: string, format: date }
+        accountNo: { type: string, minLength: 1 }
+
+    CustomerUpdate:
+      type: object
+      properties:
+        fullName: { type: string, minLength: 1 }
+        email: { type: string }
+        country: { type: string, minLength: 1 }
+        dob: { type: string, format: date }
+        accountNo: { type: string, minLength: 1 }
+
+    CustomerList:
+      type: object
+      required: [items, total, page, limit]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Customer"
+        total: { type: integer }
+        page: { type: integer }
+        limit: { type: integer }
+
+    Transaction:
+      type: object
+      required:
+        [
+          id,
+          senderId,
+          receiverId,
+          senderAccountNo,
+          receiverAccountNo,
+          amount,
+          currency,
+          timestamp,
+          status,
+          createdAt,
+        ]
+      properties:
+        id: { type: string }
+        senderId: { type: string }
+        receiverId: { type: string }
+        senderAccountNo: { type: string }
+        receiverAccountNo: { type: string }
+        senderName: { type: ["string", "null"] }
+        receiverName: { type: ["string", "null"] }
+        amount: { type: number }
+        currency: { type: string }
+        timestamp: { type: string, format: date-time }
+        status:
+          $ref: "#/components/schemas/TxStatus"
+        createdAt: { type: string, format: date-time }
+
+    TransactionInput:
+      type: object
+      required: [senderId, receiverId, amount, currency]
+      properties:
+        senderId: { type: string }
+        receiverId: { type: string }
+        amount: { type: number, exclusiveMinimum: 0 }
+        currency: { type: string, minLength: 1 }
+        timestamp: { type: string, format: date-time }
+        status:
+          $ref: "#/components/schemas/TxStatus"
+
+    TransactionUpdate:
+      type: object
+      properties:
+        amount: { type: number, exclusiveMinimum: 0 }
+        currency: { type: string, minLength: 1 }
+        timestamp: { type: string, format: date-time }
+        status:
+          $ref: "#/components/schemas/TxStatus"
+
+    TransactionList:
+      type: object
+      required: [items, total, page, limit]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Transaction"
+        total: { type: integer }
+        page: { type: integer }
+        limit: { type: integer }
+
+    GraphNode:
+      type: object
+      required: [id, accountNo, customerName, riskScore, riskLevel, degree]
+      properties:
+        id: { type: string }
+        accountNo: { type: string }
+        customerName: { type: string }
+        riskScore: { type: integer }
+        riskLevel:
+          $ref: "#/components/schemas/RiskLevel"
+        degree: { type: integer }
+
+    GraphEdge:
+      type: object
+      required:
+        [id, txId, source, target, amount, currency, timestamp, flagged]
+      properties:
+        id: { type: string }
+        txId: { type: string }
+        source: { type: string }
+        target: { type: string }
+        amount: { type: number }
+        currency: { type: string }
+        timestamp: { type: string, format: date-time }
+        flagged: { type: boolean }
+
+    GraphData:
+      type: object
+      required: [nodes, edges]
+      properties:
+        nodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphNode"
+        edges:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphEdge"
+
+    CentralityEntry:
+      type: object
+      required: [accountId, accountNo, customerName, degree, riskLevel]
+      properties:
+        accountId: { type: string }
+        accountNo: { type: string }
+        customerName: { type: string }
+        degree: { type: integer }
+        riskLevel:
+          $ref: "#/components/schemas/RiskLevel"
+
+    ComponentEntry:
+      type: object
+      required: [componentId, size, accountNos]
+      properties:
+        componentId: { type: integer }
+        size: { type: integer }
+        accountNos:
+          type: array
+          items: { type: string }
+
+    CycleEntry:
+      type: object
+      required: [accountNos, length]
+      properties:
+        accountNos:
+          type: array
+          items: { type: string }
+        length: { type: integer }
+
+    ShortestPathResult:
+      type: object
+      required: [found, path, length]
+      properties:
+        found: { type: boolean }
+        path:
+          type: array
+          items: { type: string }
+        length: { type: integer }
+
+    RiskRecomputeResult:
+      type: object
+      required: [updated, alertsCreated]
+      properties:
+        updated: { type: integer }
+        alertsCreated: { type: integer }
+
+    TriggeredRule:
+      type: object
+      required: [rule, points, description]
+      properties:
+        rule: { type: string }
+        points: { type: integer }
+        description: { type: string }
+
+    RiskBreakdown:
+      type: object
+      required: [customerId, riskScore, riskLevel, triggeredRules]
+      properties:
+        customerId: { type: string }
+        riskScore: { type: integer }
+        riskLevel:
+          $ref: "#/components/schemas/RiskLevel"
+        triggeredRules:
+          type: array
+          items:
+            $ref: "#/components/schemas/TriggeredRule"
+
+    DashboardSummary:
+      type: object
+      required:
+        [
+          totalCustomers,
+          totalTransactions,
+          highRiskAccounts,
+          totalMoneyFlow,
+          openAlerts,
+          recentAlerts,
+        ]
+      properties:
+        totalCustomers: { type: integer }
+        totalTransactions: { type: integer }
+        highRiskAccounts: { type: integer }
+        totalMoneyFlow: { type: number }
+        openAlerts: { type: integer }
+        recentAlerts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Alert"
+
+    Alert:
+      type: object
+      required:
+        [
+          id,
+          customerId,
+          customerName,
+          accountNo,
+          ruleTriggered,
+          severity,
+          description,
+          createdAt,
+          resolved,
+        ]
+      properties:
+        id: { type: string }
+        customerId: { type: string }
+        customerName: { type: string }
+        accountNo: { type: string }
+        ruleTriggered: { type: string }
+        severity:
+          $ref: "#/components/schemas/RiskLevel"
+        description: { type: string }
+        createdAt: { type: string, format: date-time }
+        resolved: { type: boolean }
+
+    AlertUpdate:
+      type: object
+      properties:
+        resolved: { type: boolean }
+
+    AlertList:
+      type: object
+      required: [items, total, page, limit]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Alert"
+        total: { type: integer }
+        page: { type: integer }
+        limit: { type: integer }
+
+    AuditLogEntry:
+      type: object
+      required: [id, userId, userName, action, targetType, targetId, timestamp]
+      properties:
+        id: { type: string }
+        userId: { type: string }
+        userName: { type: string }
+        action: { type: string }
+        targetType: { type: string }
+        targetId: { type: string }
+        timestamp: { type: string, format: date-time }
+
+    AuditLogList:
+      type: object
+      required: [items, total, page, limit]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/AuditLogEntry"
+        total: { type: integer }
+        page: { type: integer }
+        limit: { type: integer }
+
+    SearchResult:
+      type: object
+      required: [type, id, label, subtitle, href]
+      properties:
+        type: { type: string, enum: [customer, account, transaction] }
+        id: { type: string }
+        label: { type: string }
+        subtitle: { type: string }
+        href: { type: string }
+
+    NotificationItem:
+      type: object
+      required: [id, title, message, severity, createdAt, read]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        message: { type: string }
+        severity:
+          $ref: "#/components/schemas/RiskLevel"
+        createdAt: { type: string, format: date-time }
+        read: { type: boolean }
+
+    SuspiciousAccountEntry:
+      type: object
+      required: [accountNo, customerName, riskScore, riskLevel, topRules]
+      properties:
+        accountNo: { type: string }
+        customerName: { type: string }
+        riskScore: { type: integer }
+        riskLevel:
+          $ref: "#/components/schemas/RiskLevel"
+        topRules:
+          type: array
+          items: { type: string }
+
+    ReportSummary:
+      type: object
+      required:
+        [
+          generatedAt,
+          riskCounts,
+          totalFlaggedTransactions,
+          suspiciousAccounts,
+        ]
+      properties:
+        generatedAt: { type: string, format: date-time }
+        riskCounts:
+          type: object
+          required: [low, medium, high, critical]
+          properties:
+            low: { type: integer }
+            medium: { type: integer }
+            high: { type: integer }
+            critical: { type: integer }
+        totalFlaggedTransactions: { type: integer }
+        suspiciousAccounts:
+          type: array
+          items:
+            $ref: "#/components/schemas/SuspiciousAccountEntry"
+
+    AiAssistantInput:
+      type: object
+      properties:
+        question: { type: string }
