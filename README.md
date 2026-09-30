@@ -81,7 +81,7 @@ This **circular flow** is a classic layering pattern. SentinelAML combines **tra
 <td><b>Cross-Bank Analysis</b><br><img src="docs/screenshots/crossbank%20analysis.png.png" width="100%"></td>
 </tr>
 <tr>
-<td><b>Potential Mules</b><br><img src="docs/screenshots/potential%20mule.png.png" width="100%"></td>
+<td><b>Potential Mules</b><br><img src="docs/screenshots/potentialmule.png.png" width="100%"></td>
 <td><b>Compliance Reports</b><br><img src="docs/screenshots/compilance%20report.png.png" width="100%"></td>
 </tr>
 </table>
