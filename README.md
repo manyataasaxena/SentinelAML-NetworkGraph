@@ -288,7 +288,7 @@ docker compose up --build
 ```
 
 ### 6. Demo login : admin@sentinelaml.dev / Sentinel123!
-For detailed local setup, see [DEVELOPMENT.md](DEVELOPMENT.md).
+### For detailed local setup, see [DEVELOPMENT.md](DEVELOPMENT.md).
 ---
 
 ## 📸 Application Preview
