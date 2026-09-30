@@ -21,6 +21,7 @@
 
 - [Overview](#-overview)
 - [Problem Statement](#-problem-statement)
+- [Application Preview](#-application-preview)
 - [Key Features](#-key-features)
 - [System Architecture](#-system-architecture)
 - [Transaction Processing Flow](#-transaction-processing-flow)
@@ -28,7 +29,6 @@
 - [Tech Stack](#-tech-stack)
 - [Demo Data Snapshot](#-demo-data-snapshot)
 - [Getting Started](#-getting-started)
-- [Application Preview](#-application-preview)
 - [Design Highlights](#-design-highlights)
 - [Future Enhancements](#-future-enhancements)
 - [Author](#-author)
@@ -68,6 +68,24 @@ graph LR
 This **circular flow** is a classic layering pattern. SentinelAML combines **transaction-level rules** with **network-level intelligence** to surface exactly these patterns.
 
 ---
+
+## 📸 Application Preview
+
+<table>
+<tr>
+<td><b>Dashboard</b><br><img src="docs/screenshots/dashboard.png.png" width="100%"></td>
+<td><b>Transactions</b><br><img src="docs/screenshots/transactions.png.png" width="100%"></td>
+</tr>
+<tr>
+<td><b>Network Graph</b><br><img src="docs/screenshots/networkgraph.png.png" width="100%"></td>
+<td><b>Cross-Bank Analysis</b><br><img src="docs/screenshots/crossbank%20analysis.png.png" width="100%"></td>
+</tr>
+<tr>
+<td><b>Potential Mules</b><br><img src="docs/screenshots/potential%20mule.png.png" width="100%"></td>
+<td><b>Compliance Reports</b><br><img src="docs/screenshots/compilance%20report.png.png" width="100%"></td>
+</tr>
+</table>
+
 
 ## ✨ Key Features
 
@@ -289,26 +307,6 @@ docker compose up --build
 
 ### 6. Demo login : admin@sentinelaml.dev / Sentinel123!
 ### For detailed local setup, see [DEVELOPMENT.md](DEVELOPMENT.md).
----
-
-## 📸 Application Preview
-
-<table>
-<tr>
-<td><b>Dashboard</b><br><img src="docs/screenshots/dashboard.png.png" width="100%"></td>
-<td><b>Transactions</b><br><img src="docs/screenshots/transactions.png.png" width="100%"></td>
-</tr>
-<tr>
-<td><b>Network Graph</b><br><img src="docs/screenshots/networkgraph.png.png" width="100%"></td>
-<td><b>Cross-Bank Analysis</b><br><img src="docs/screenshots/crossbank%20analysis.png.png" width="100%"></td>
-</tr>
-<tr>
-<td><b>Potential Mules</b><br><img src="docs/screenshots/potential%20mule.png.png" width="100%"></td>
-<td><b>Compliance Reports</b><br><img src="docs/screenshots/compilance%20report.png.png" width="100%"></td>
-</tr>
-</table>
-
-
 
 ---
 
